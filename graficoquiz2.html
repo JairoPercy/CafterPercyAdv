@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico para WhatsApp</title>
+    <title>Gráfico Interativo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -15,6 +15,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 1rem;
+            transition: transform 0.1s ease-in-out;
         }
         .container {
             background-color: #fff;
@@ -71,6 +72,41 @@
             font-weight: bold;
             color: #b8860b;
         }
+        /* Estilos do quiz */
+        .quiz-container {
+            padding: 2rem;
+            border-radius: 1.5rem;
+            background-color: #f9fafb;
+            margin-top: 2rem;
+        }
+        .action-button {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #selected-action-message {
+            display: none;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        /* Animação de tremor de tela */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        .shake-screen {
+            animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center">
@@ -91,32 +127,47 @@
                     <span class="bar-title">Ações Trabalhistas</span>
                 </div>
             </div>
+        </div>
 
-                        <div class="mt-16 flex flex-col items-center">
-                <p class="text-sm text-gray-500 mb-2">Fonte: Dados do Judiciário Brasileiro</p>
-                <span class="text-base font-bold text-yellow-700">@cafterpercy.adv</span>
+                <div class="quiz-container">
+            <h3 class="text-lg font-semibold mb-4">Você já moveu uma ação?</h3>
+            <div class="flex justify-center gap-4 mb-4">
+                <button onclick="handleActionClick('Previdenciária')" class="action-button bg-purple-200 text-purple-800 hover:bg-purple-300">Ação Previdenciária</button>
+                <button onclick="handleActionClick('Trabalhista')" class="action-button bg-green-200 text-green-800 hover:bg-green-300">Ação Trabalhista</button>
             </div>
+            <p id="selected-action-message">Ação selecionada: <span id="action-name"></span>. O gráfico não muda, mas a sua situação pode.</p>
+            <a href="https://wa.me/5521985518475" target="_blank" class="mt-8 inline-block">
+                <button class="bg-rose-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-rose-600 transition duration-300 flex items-center gap-2">
+                    <span>&#x2705;</span> Fale agora com um especialista!
+                </button>
+            </a>
         </div>
     </div>
     
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <div class="mt-4">
-        <button onclick="downloadImage('png')" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">Baixar em PNG</button>
-        <button onclick="downloadImage('jpeg')" class="bg-green-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-green-700 transition duration-300">Baixar em JPEG</button>
-    </div>
-
     <script>
-        function downloadImage(format) {
-            const element = document.getElementById('chart-image');
-            html2canvas(element, { scale: 2 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `grafico_cafterpercyadv.${format}`;
-                link.href = canvas.toDataURL(`image/${format}`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
+        // Crie um elemento de áudio.
+        // Por favor, substitua a URL abaixo por um link direto para um arquivo de áudio (.mp3, .wav, etc.)
+        // Por exemplo: 'https://seusite.com/som-do-clique.mp3'
+        const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); 
+
+        function handleActionClick(action) {
+            // 1. Tocar o som
+            audio.play();
+
+            // 2. Fazer a tela tremer
+            const body = document.body;
+            body.classList.add('shake-screen');
+            setTimeout(() => {
+                body.classList.remove('shake-screen');
+            }, 500);
+
+            // 3. Exibir a mensagem
+            const messageContainer = document.getElementById('selected-action-message');
+            const actionNameSpan = document.getElementById('action-name');
+            actionNameSpan.textContent = action;
+            messageContainer.style.display = 'block';
         }
     </script>
+
 </body>
 </html>
