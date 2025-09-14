@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Justiça Lenta - Quiz Interativo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
         body {
@@ -37,6 +36,41 @@
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
+        .bar-chart-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 5rem;
+            margin-top: 4rem;
+        }
+        .bar {
+            width: 120px;
+            background-color: #1E3A8A;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: all 0.5s ease-in-out;
+        }
+        .bar-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .bar-title {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9em;
+            color: #4b5563;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center">
@@ -46,8 +80,17 @@
 
         <div id="chart-container" class="mb-8 p-4 bg-gray-50 rounded-lg shadow-inner">
             <h2 class="text-xl font-semibold mb-4">Processos Previdenciários x Trabalhistas (2024)</h2>
-            <div id="bar-chart" class="w-full h-80"></div>
-            <p class="text-sm text-gray-500 mt-2">Fonte: Dados do Judiciário Brasileiro</p>
+            <div class="bar-chart-container">
+                <div class="bar bg-indigo-600" style="height: 190px;">
+                    <span class="bar-label">5,5 mi</span>
+                    <span class="bar-title">Ações Previdenciárias</span>
+                </div>
+                <div class="bar bg-green-600" style="height: 138px;">
+                    <span class="bar-label">4,0 mi</span>
+                    <span class="bar-title">Ações Trabalhistas</span>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-12">Fonte: Dados do Judiciário Brasileiro<br>@cafterpercy.adv</p>
         </div>
 
         <div id="quiz-container" class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -64,37 +107,6 @@
     </div>
 
     <script>
-        // Dados do gráfico
-        const data = [{
-            x: ['Ações Previdenciárias', 'Ações Trabalhistas'],
-            y: [5.5, 4.0], // Dados fictícios em milhões de ações
-            type: 'bar',
-            marker: {
-                color: ['#1E3A8A', '#065F46']
-            },
-            hoverinfo: 'y+text',
-            hovertext: ['5,5 milhões de ações', '4,0 milhões de ações']
-        }];
-
-        const layout = {
-            title: 'Volume de Ações Judiciais no Brasil (2024)',
-            font: { family: 'Inter', size: 14 },
-            xaxis: {
-                title: 'Tipo de Ação',
-                showgrid: false,
-                zeroline: false
-            },
-            yaxis: {
-                title: 'Número de Ações (em milhões)',
-                showgrid: true
-            },
-            plot_bgcolor: 'transparent',
-            paper_bgcolor: 'transparent',
-            margin: { t: 40, b: 40, l: 40, r: 40 }
-        };
-
-        Plotly.newPlot('bar-chart', data, layout);
-
         function handleAnswer(answer) {
             const messageEl = document.getElementById('message');
             const ctaEl = document.getElementById('whatsapp-cta');
@@ -102,30 +114,25 @@
             const btnPrev = document.getElementById('btn-prev');
             const btnTrab = document.getElementById('btn-trab');
 
-            // Play a sound to confirm the click
             const synth = new Tone.Synth().toDestination();
             synth.triggerAttackRelease("C4", "8n");
 
-            // Exibe a mensagem de confirmação
             messageEl.textContent = `Ação selecionada: ${answer}. O gráfico não muda, mas a sua situação pode.`;
             messageEl.classList.remove('hidden');
 
-            // Faz o gráfico tremer
             chartContainer.classList.add('shake');
             setTimeout(() => {
                 chartContainer.classList.remove('shake');
             }, 820);
 
-            // Mostra o CTA
             ctaEl.classList.remove('hidden');
             
-            // Desativa os botões para evitar múltiplos cliques
             btnPrev.disabled = true;
             btnTrab.disabled = true;
             btnPrev.classList.add('opacity-50', 'cursor-not-allowed');
             btnTrab.classList.add('opacity-50', 'cursor-not-allowed');
         }
-
     </script>
+</script>
 </body>
 </html>
